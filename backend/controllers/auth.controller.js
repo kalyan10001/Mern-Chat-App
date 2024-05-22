@@ -28,7 +28,7 @@ export const signup=async(req,res)=>{
                 username:username,
                 password:hashedpassword,
                 gender:gender,
-                profilepic:gender==="male"?boyprofilepic:girlprofilepic,
+                profilepic:gender==="male"?boyprofilepic:girlprofilepic
             });
 
         if(newUser)
@@ -54,32 +54,49 @@ export const signup=async(req,res)=>{
     }
 }
 
-export const login=async(req,res)=>{
-    try{
-        const {username,password}=req.body;
-        const user=await User.findOne({username});
-        const IspassCorrect=await bcryptjs.compare(password,user?.password||"");
-        if(!user || !IspassCorrect)
-            {
-                return res.status(400).json({error:"invalid username or password"});
-            }
+export const login = async (req, res) => {
+	try {
+		const { username, password } = req.body;
 
-            generateTokenAndSetcookie(user._id,res);
+        console.log("Request Body:", req.body);
 
-            res.status(201).json({
-                _id:user._id,
-                fullname:user.fullname,
-                username:user.username,
-                profilepic:user.profilepic
-            });
+		if (!username || !password) {
+			return res.status(400).json({ error: "Username and password are required" });
+		}
 
-    }
-    catch(error){
-        console.log("error in login controller",error.message);
-        res.status(500).json({error:"internal server error"});
-    }
-}
+        console.log("Querying user with username:", username);
 
+		const user = await User.findOne({ username });
+
+        console.log("User found:", user);
+
+		if (!user || !user.password) {
+			return res.status(400).json({ error: "Invalid username or password" });
+		}
+
+        console.log("Comparing passwords:", password, user.password);
+
+		const isPasswordCorrect = await bcryptjs.compare(password, user.password);
+
+        console.log("Password comparison result:", isPasswordCorrect);
+
+		if (!isPasswordCorrect) {
+			return res.status(400).json({ error: "Invalid username or password" });
+		}
+
+		generateTokenAndSetcookie(user._id, res);
+
+		res.status(200).json({
+			_id: user._id,
+			fullName: user.fullname,
+			username: user.username,
+			profilepic: user.profilepic,
+		});
+	} catch (error) {
+		console.log("Error in login controller", error);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+};
 export const logout=async(req,res)=>{
     try{
         res.cookie("jwt","",{maxAge:"0"});
