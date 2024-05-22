@@ -8,9 +8,8 @@ import userRoutes from "./routes/user.routes.js";
 import cookieParser from "cookie-parser";
 
 import connectToMongoDB from "./db/connectToMongoDb.js";
-
+import {app, server} from './socket/socket.js'
 const PORT=process.env.PORT || 5000;
-const app=express()
 
 dotenv.config();
 
@@ -25,8 +24,8 @@ app.use("/api/users",userRoutes);
 //     res.send("hello im lee")
 // });
 
-app.listen(PORT,()=>
+server.listen(PORT,()=>
     {
         connectToMongoDB();
-        console.log('running the port ${PORT}')
+        console.log(`running the port ${PORT}`)
 });
