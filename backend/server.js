@@ -9,8 +9,8 @@ import userRoutes from "./routes/user.routes.js";
 dotenv.config();
 import cookieParser from "cookie-parser";
 
-import connectToMongoDB from "./db/connectToMongoDb.js";
 import {app, server} from './socket/socket.js'
+import connectToMongoDB from "./db/connectToMongoDB.js";
 const PORT=process.env.PORT || 5000;
 
 const __dirname=path.resolve();
