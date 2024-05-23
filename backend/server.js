@@ -26,7 +26,7 @@ app.use("/api/users",userRoutes);
 // app.get("/",(req,res)=>{
 //     res.send("hello im lee")
 // });
-app.use(express.static(path.join(__dirname,"/frontend/dist")))
+app.use(express.static(path.join(__dirname,"/frontend/dist")));
 
 
 app.get("*",(req,res)=>{
